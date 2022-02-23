@@ -1,4 +1,4 @@
-# Nack-rebalance-demo
+# nack-rebalance-demo
 
 ### Description
 
