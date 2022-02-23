@@ -12,6 +12,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 
 @SpringBootApplication
 public class NackDemoApplication {
@@ -39,8 +41,8 @@ public class NackDemoApplication {
   }
 
   @KafkaListener(topics = TOPIC)
-  public void listenGroupFoo(String message, Acknowledgment ack) {
-    logger.info("Received: " + message);
+  public void listenGroupFoo(String message, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
+    logger.info("Partition " + partition + ", " + message);
     if (Math.random() < NACK_PERCENTAGE) {
       logger.warn("Unlucky! Calling nack().");
       ack.nack(NACK_SLEEP_MILLIS);
